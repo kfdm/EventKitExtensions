@@ -35,24 +35,24 @@ open class CalendarStore: ObservableObject {
     store.refreshSourcesIfNecessary()
   }
 
-    public var authorized: Bool {
-        switch EKEventStore.authorizationStatus(for: .reminder) {
-        case .authorized:
-            return true
-        case .denied:
-            return false
-        case .notDetermined:
-            store.requestAccess(to: .reminder) { (granted, error) in
-                self.logger.debug("Granted access \(granted.description)")
-                self.objectWillChange.send()
-            }
-            return false
-        case .restricted:
-            return false
-        @unknown default:
-            return false
-        }
+  public var authorized: Bool {
+    switch EKEventStore.authorizationStatus(for: .reminder) {
+    case .authorized:
+      return true
+    case .denied:
+      return false
+    case .notDetermined:
+      store.requestAccess(to: .reminder) { (granted, error) in
+        self.logger.debug("Granted access \(granted.description)")
+        self.objectWillChange.send()
+      }
+      return false
+    case .restricted:
+      return false
+    @unknown default:
+      return false
     }
+  }
 }
 
 // MARK: - EKCalendar Methods
@@ -103,11 +103,11 @@ extension CalendarStore {
     }
   }
 
-    public func new(for calendar: EKCalendar) -> EKReminder {
-        let reminder = EKReminder(eventStore: store)
-        reminder.calendar = calendar
-        return reminder
-    }
+  public func new(for calendar: EKCalendar) -> EKReminder {
+    let reminder = EKReminder(eventStore: store)
+    reminder.calendar = calendar
+    return reminder
+  }
 
   public func complete(reminder: EKReminder) {
     reminder.completionDate = Date()
@@ -124,35 +124,35 @@ extension CalendarStore {
 }
 
 extension CalendarStore {
-    public func save(reminders: [EKReminder]) {
-        logger.debug("Saving \(reminders.count) reminders")
-        do {
-          try reminders.forEach { try store.save($0, commit: false) }
-          try store.commit()
-        } catch {
-          logger.error("Error saving reminders: \(error.localizedDescription)")
-        }
-        objectWillChange.send()
+  public func save(reminders: [EKReminder]) {
+    logger.debug("Saving \(reminders.count) reminders")
+    do {
+      try reminders.forEach { try store.save($0, commit: false) }
+      try store.commit()
+    } catch {
+      logger.error("Error saving reminders: \(error.localizedDescription)")
     }
+    objectWillChange.send()
+  }
 
-    public func save(_ reminder: EKReminder) {
-        save(reminders: [reminder])
-    }
+  public func save(_ reminder: EKReminder) {
+    save(reminders: [reminder])
+  }
 }
 
 extension CalendarStore {
-    public func remove(reminders: [EKReminder]) {
-      logger.debug("Removing \(reminders.count) reminders")
-      do {
-        try reminders.forEach { try store.remove($0, commit: false) }
-        try store.commit()
-      } catch {
-        logger.error("Error removing reminders: \(error.localizedDescription)")
-      }
-      objectWillChange.send()
+  public func remove(reminders: [EKReminder]) {
+    logger.debug("Removing \(reminders.count) reminders")
+    do {
+      try reminders.forEach { try store.remove($0, commit: false) }
+      try store.commit()
+    } catch {
+      logger.error("Error removing reminders: \(error.localizedDescription)")
     }
-    public func remove(reminder: EKReminder) {
-      try? store.remove(reminder, commit: true)
-      objectWillChange.send()
-    }
+    objectWillChange.send()
+  }
+  public func remove(reminder: EKReminder) {
+    try? store.remove(reminder, commit: true)
+    objectWillChange.send()
+  }
 }

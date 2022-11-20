@@ -20,17 +20,16 @@ extension EKReminder: Identifiable {
 }
 
 extension EKSource: Identifiable {
-    public var id: String {
-        return sourceIdentifier
-    }
+  public var id: String {
+    return sourceIdentifier
+  }
 }
 
 extension EKRecurrenceRule: Identifiable {
-    public var id: String {
-        return calendarIdentifier
-    }
+  public var id: String {
+    return calendarIdentifier
+  }
 }
-
 
 extension EKEventStore {
   public func fetchReminders(matching predicate: NSPredicate) async throws -> [EKReminder]? {
