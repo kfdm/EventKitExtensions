@@ -8,10 +8,11 @@
 import Foundation
 
 extension Date {
-  public static var startOfDay: Date {
-    return Calendar.current.startOfDay(for: .init())
-  }
-  public static var endOfDay: Date {
-    return Calendar.current.startOfDay(for: .init()).addingTimeInterval(24 * 60 * 60)
-  }
+    public var startOfDay: Date {
+        return Calendar.current.startOfDay(for: self)
+    }
+    public var endOfDay: Date {
+        return Calendar.current.startOfDay(for: self).addingTimeInterval(24 * 60 * 60)
+    }
+
 }

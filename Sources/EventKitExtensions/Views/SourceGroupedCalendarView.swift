@@ -9,31 +9,31 @@ import EventKit
 import SwiftUI
 
 struct CalendarGroup {
-  var source: String
-  var calendars: [EKCalendar]
+    var source: String
+    var calendars: [EKCalendar]
 }
 
 public struct SourceGroupedCalendarView<ContentView: View>: View {
-  private var groups: [CalendarGroup]
-  private var content: (EKCalendar) -> ContentView
+    private var groups: [CalendarGroup]
+    private var content: (EKCalendar) -> ContentView
 
-  public init(groups: [EKCalendar], content: @escaping (EKCalendar) -> ContentView) {
-    let grouped = Dictionary.init(grouping: groups) { $0.source!.title }
-    let mapped = grouped.map { CalendarGroup(source: $0, calendars: $1) }
-    self.groups = mapped.sorted { $0.source > $1.source }
-    self.content = content
-  }
-
-  public var body: some View {
-    List {
-      ForEach(groups, id: \.source) { group in
-        Section(group.source) {
-          ForEach(group.calendars.sorted(by: \.title)) { calendar in
-            content(calendar)
-          }
-        }
-      }
+    public init(groups: [EKCalendar], content: @escaping (EKCalendar) -> ContentView) {
+        let grouped = Dictionary.init(grouping: groups) { $0.source!.title }
+        let mapped = grouped.map { CalendarGroup(source: $0, calendars: $1) }
+        self.groups = mapped.sorted { $0.source > $1.source }
+        self.content = content
     }
-    .listStyle(GroupedListStyle())
-  }
+
+    public var body: some View {
+        List {
+            ForEach(groups, id: \.source) { group in
+                Section(group.source) {
+                    ForEach(group.calendars.sorted(by: \.title)) { calendar in
+                        content(calendar)
+                    }
+                }
+            }
+        }
+        .listStyle(GroupedListStyle())
+    }
 }
