@@ -10,7 +10,7 @@ import Foundation
 import SwiftUI
 
 extension EKCalendar: Identifiable {
-    var color: Color {
+    public var color: Color {
         Color(cgColor)
     }
 }
