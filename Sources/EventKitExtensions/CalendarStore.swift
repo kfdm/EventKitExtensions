@@ -44,7 +44,6 @@ open class CalendarStore: ObservableObject {
         case .notDetermined:
             store.requestAccess(to: .reminder) { (granted, error) in
                 self.logger.debug("Granted access \(granted.description)")
-                self.objectWillChange.send()
             }
             return false
         case .restricted:
@@ -129,7 +128,6 @@ extension CalendarStore {
             reminder.calendar = calendar
             reminder.title = title
             try store.save(reminder, commit: true)
-            objectWillChange.send()
         } catch {
             logger.error("Error creating reminder: \(error.localizedDescription)")
         }
@@ -144,13 +142,11 @@ extension CalendarStore {
     public func complete(reminder: EKReminder) {
         reminder.completionDate = Date()
         try? store.save(reminder, commit: true)
-        objectWillChange.send()
     }
 
     public func undo(reminder: EKReminder) {
         reminder.completionDate = nil
         try? store.save(reminder, commit: true)
-        objectWillChange.send()
     }
 
 }
@@ -164,7 +160,6 @@ extension CalendarStore {
         } catch {
             logger.error("Error saving reminders: \(error.localizedDescription)")
         }
-        objectWillChange.send()
     }
 
     public func save(_ reminder: EKReminder) {
@@ -181,10 +176,8 @@ extension CalendarStore {
         } catch {
             logger.error("Error removing reminders: \(error.localizedDescription)")
         }
-        objectWillChange.send()
     }
     public func remove(reminder: EKReminder) {
         try? store.remove(reminder, commit: true)
-        objectWillChange.send()
     }
 }
