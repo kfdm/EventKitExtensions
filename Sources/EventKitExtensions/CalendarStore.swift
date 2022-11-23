@@ -157,6 +157,7 @@ extension CalendarStore {
         do {
             try reminders.forEach { try store.save($0, commit: false) }
             try store.commit()
+            refreshSourcesIfNecessary()
         } catch {
             logger.error("Error saving reminders: \(error.localizedDescription)")
         }
