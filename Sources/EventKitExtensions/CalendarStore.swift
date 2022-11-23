@@ -100,7 +100,7 @@ extension CalendarStore {
     }
 
     public func incomplete(from start: Date? = nil, to end: Date? = nil) async -> [EKReminder] {
-        logger.debug("Fetching completed from \(start.debugDescription) to \(end.debugDescription)")
+        logger.debug("Fetching incomplete from \(start.debugDescription) to \(end.debugDescription)")
         let predicate = store.predicateForIncompleteReminders(
             withDueDateStarting: start,
             ending: end,
@@ -164,6 +164,7 @@ extension CalendarStore {
 
     public func save(_ reminder: EKReminder) {
         save(reminders: [reminder])
+
     }
 }
 
