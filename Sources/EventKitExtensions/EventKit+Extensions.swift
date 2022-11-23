@@ -48,3 +48,25 @@ extension EKEventStore {
         }
     }
 }
+
+extension View {
+    func onReceive(
+        _ name: Notification.Name,
+        center: NotificationCenter = .default,
+        object: AnyObject? = nil,
+        perform action: @escaping (Notification) async -> Void
+    ) -> some View {
+        self.onReceive(center.publisher(for: name)) { output in
+            Task { await action(output) }
+        }
+    }
+
+    public func onEventStoreChanged(action: @escaping () async -> Void) -> some View {
+        self
+            .onReceive(.EKEventStoreChanged) { notification in
+                print("Received \(notification.debugDescription)")
+                await action()
+            }
+
+    }
+}
