@@ -149,6 +149,9 @@ extension CalendarStore {
         try? store.save(reminder, commit: true)
     }
 
+    public func reminder(for id: String) async -> EKReminder? {
+        return await incomplete().first { $0.calendarItemIdentifier == id }
+    }
 }
 
 extension CalendarStore {
@@ -165,7 +168,6 @@ extension CalendarStore {
 
     public func save(_ reminder: EKReminder) {
         save(reminders: [reminder])
-
     }
 }
 

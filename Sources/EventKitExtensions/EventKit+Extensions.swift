@@ -67,6 +67,5 @@ extension View {
                 print("Received \(notification.debugDescription)")
                 await action()
             }
-
     }
 }
