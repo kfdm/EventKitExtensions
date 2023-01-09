@@ -67,6 +67,11 @@ public struct CalendarDropDelegate: DropDelegate {
                         reminder.calendar = calendar
                         store.save(reminders: [reminder])
                     }
+                case "http", "https":
+                    let reminder = store.new(for: calendar)
+                    reminder.title = "URL Drop?"
+                    reminder.url = url
+                    store.save(reminder)
                 default:
                     print("Unknown URL Scheme")
                 }
