@@ -31,6 +31,8 @@ extension EKRecurrenceRule: Identifiable {
     }
 }
 
+// MARK: EKReminder
+
 extension EKEventStore {
     public func fetchReminders(matching predicate: NSPredicate) async throws -> [EKReminder]? {
         return try await withCheckedThrowingContinuation({
@@ -43,6 +45,28 @@ extension EKEventStore {
     public func fetchReminders(matching predicate: NSPredicate) async -> [EKReminder] {
         do {
             return try await fetchReminders(matching: predicate) ?? []
+        } catch {
+            return []
+        }
+    }
+}
+
+// MARK: EKEvent
+
+extension EKEvent: Identifiable {
+
+}
+
+extension EKEventStore {
+    public func fetchEvent(matching predicate: NSPredicate) async throws -> [EKEvent]? {
+        return try await withCheckedThrowingContinuation({
+            (continuation: CheckedContinuation<[EKEvent]?, Error>) in
+            continuation.resume(returning: self.events(matching: predicate))
+        })
+    }
+    public func fetchEvent(matching predicate: NSPredicate) async -> [EKEvent] {
+        do {
+            return try await fetchEvent(matching: predicate) ?? []
         } catch {
             return []
         }
