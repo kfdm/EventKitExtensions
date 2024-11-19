@@ -16,3 +16,12 @@ extension Date {
     }
 
 }
+
+extension Date {
+    /// Convert given date to DateComponents to use with EK lookups
+    /// - Parameter calendar: System calendar
+    /// - Returns: DateComponents to be used with EK values
+    public func toComponents(calendar: Calendar = Calendar.current) -> DateComponents {
+        calendar.dateComponents([.year, .month, .day, .hour, .minute], from: self)
+    }
+}

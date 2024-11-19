@@ -113,7 +113,7 @@ extension EKEventStore {
         if let urlstring = url {
             reminder.url = URL(string: urlstring)
         }
-        reminder.dueDateComponents = Calendar.current.dateComponents(from: due)
+        reminder.dueDateComponents = due?.toComponents()
 
         if let frequence = recurrence {
             reminder.addRecurrenceRule(.init(recurrenceWith: frequence, interval: 1, end: nil))
