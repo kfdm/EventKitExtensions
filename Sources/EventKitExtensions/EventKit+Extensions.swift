@@ -11,12 +11,14 @@ import SwiftUI
 
 extension EKCalendar: Identifiable {
     public var color: Color {
-        Color(cgColor)
+        get { Color(cgColor) }
+        // TODO: Figure out why this doesn't seem to work with simulator/previews
+        set { cgColor = newValue.cgColor }
     }
 }
 
 extension EKReminder: Identifiable {
-
+    public var hasUrl: Bool { nil != url }
 }
 
 extension EKSource: Identifiable {
@@ -91,5 +93,35 @@ extension View {
                 print("Received \(notification.debugDescription)")
                 await action()
             }
+    }
+}
+
+extension EKEventStore {
+    public func factoryCalendar(for type: EKEntityType) -> EKCalendar {
+        let calendar = EKCalendar(for: type, eventStore: self)
+        calendar.title = "Factory: Calendar"
+        calendar.cgColor = CGColor(red: 128, green: 0, blue: 128, alpha: 1)
+        return calendar
+    }
+    public func factoryReminder(title: String = "Factory Reminder", url: String? = nil, due: Date? = nil, recurrence: EKRecurrenceFrequency? = nil, priority: Int = 5, location: String? = nil)
+        -> EKReminder
+    {
+        let reminder = EKReminder(eventStore: self)
+        reminder.calendar = self.factoryCalendar(for: .reminder)
+        reminder.title = title
+
+        if let urlstring = url {
+            reminder.url = URL(string: urlstring)
+        }
+        reminder.dueDateComponents = Calendar.current.dateComponents(from: due)
+
+        if let frequence = recurrence {
+            reminder.addRecurrenceRule(.init(recurrenceWith: frequence, interval: 1, end: nil))
+        }
+
+        reminder.location = "Some Location"
+        reminder.priority = priority
+
+        return reminder
     }
 }
