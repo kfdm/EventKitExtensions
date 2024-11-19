@@ -20,7 +20,7 @@ open class CalendarStore: ObservableObject {
     }
 
     public func calendars() async -> [EKCalendar] {
-        logger.info("fetching calendars")
+        logger.info("fetching EKCalendar for .reminder")
         do {
             try await store.requestAccess(to: .reminder)
             return store.calendars(for: .reminder)
@@ -48,6 +48,10 @@ open class CalendarStore: ObservableObject {
             return false
         case .restricted:
             return false
+        case .fullAccess:
+            return true
+        case .writeOnly:
+            return true
         @unknown default:
             return false
         }

@@ -46,7 +46,10 @@ public struct SourceGroupedCalendarView<Header: View, Footer: View, ContentView:
             }
             self.footer
         }
-        .listStyle(GroupedListStyle())
+
+        #if os(iOS)
+            .listStyle(GroupedListStyle())
+        #endif
     }
 }
 
