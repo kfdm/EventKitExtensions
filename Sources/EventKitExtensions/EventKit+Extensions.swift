@@ -101,7 +101,9 @@ extension EKEventStore {
         let calendar = EKCalendar(for: type, eventStore: self)
         calendar.title = "Factory: Calendar"
         calendar.cgColor = CGColor(red: 128, green: 0, blue: 128, alpha: 1)
+        try? self.saveCalendar(calendar, commit: true)
         return calendar
+
     }
     public func factoryReminder(title: String = "Factory Reminder", url: String? = nil, due: Date? = nil, recurrence: EKRecurrenceFrequency? = nil, priority: Int = 5, location: String? = nil)
         -> EKReminder
@@ -121,6 +123,13 @@ extension EKEventStore {
 
         reminder.location = "Some Location"
         reminder.priority = priority
+        reminder.notes = """
+            This is a reminder generated from a factory.
+            [Link](https://example.com)
+
+            - one
+            - two
+            """
 
         return reminder
     }
